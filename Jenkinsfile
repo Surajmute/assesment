@@ -4,19 +4,17 @@ pipeline {
         node any
     }
 
-    stages {
         stages {
           stage('pull-code') { 
             steps {
                 git branch: 'main', credentialsId: 'Github_tkn', url: 'https://github.com/sumit123-456/assesment.git'
+            }
           }
-        
-        }
         stage('Build') { 
             steps {
              sh 'docker build -t knx1:$BUILD_NUMBER .'
             }
-          }
+        }
         stage('push') { 
             steps {
               sh 'docker tag knx1:$BUILD_NUMBER sumitperkunde/knx1:$BUILD_NUMBER'
@@ -32,7 +30,6 @@ pipeline {
               sh'docker run -itd -p 80:80 sumitperkunde/knx1:$BUILD_NUMBER'
 
             }
-          }
         }
     }
 }
