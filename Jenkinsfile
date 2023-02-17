@@ -7,7 +7,7 @@ pipeline {
         stages {
           stage('pull-code') { 
             steps {
-                git branch: 'main', credentialsId: 'Github_tkn', url: 'https://github.com/sumit123-456/assesment.git'
+                git branch: 'main', credentialsId: 'enkins', url: 'https://github.com/sumit123-456/assesment.git'
             }
           }
         stage('Build') { 
