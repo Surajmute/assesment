@@ -5,22 +5,34 @@ pipeline {
     }
 
     stages {
-        stage('Build Image') {
-            when {
-                branch 'master'  //only run these steps on the master branch
-            }
-
-            // Jenkins Stage to Build the Docker Image
-
+        stages {
+          stage('pull-code') { 
+            steps {
+                git branch: 'main', credentialsId: 'Github_tkn', url: 'https://github.com/sumit123-456/assesment.git'
+          }
+        
         }
-
-        stage('Publish Image') {
-            when {
-                branch 'master'  //only run these steps on the master branch
+        stage('Build') { 
+            steps {
+             sh 'docker build -t knx1:$BUILD_NUMBER .'
             }
-            
-            // Jenkins Stage to Publish the Docker Image to Dockerhub or any Docker repository of your choice.
+          }
+        stage('push') { 
+            steps {
+              sh 'docker tag knx1:$BUILD_NUMBER sumitperkunde/knx1:$BUILD_NUMBER'
+              sh 'sudo chmod 666 /var/run/docker.sock'
+              sh 'cat password.txt | docker login --username sumitperkunde --password-stdin'
+              sh'docker push sumitperkunde/knx1:$BUILD_NUMBER'
+            }
+        }
+        stage('pull & deploy') { 
+            steps {
+             
+              sh'docker pull sumitperkunde/knx1:$BUILD_NUMBER'
+              sh'docker run -itd -p 80:80 sumitperkunde/knx1:$BUILD_NUMBER'
 
+            }
+          }
         }
     }
 }
