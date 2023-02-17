@@ -1,8 +1,6 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent {
-        node any
-    }
+    agent any
 
         stages {
           stage('pull-code') { 
